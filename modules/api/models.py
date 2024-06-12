@@ -340,10 +340,18 @@ class MatchParam(BaseModel):
     text: str
 
 class MatchModel(BaseModel):
-    MatchID : int = Field(title="MatchID",description="Match ID")
+    matchID : int = Field(title="MatchID",description="Match ID")
+    image:Optional[str]
 
 class FetchUrlParam(BaseModel):
     prompt: str
 
 class FetchUrlModel(BaseModel):
-    url:str
+    image:str
+
+
+class CoolToneRequest(BaseModel):
+    image:str
+
+class CoolToneReponse(BaseModel):
+    image:str

@@ -24,6 +24,7 @@ from nltk.tokenize import word_tokenize
 from deep_translator import GoogleTranslator
 
 
+from modules.api.utils import download_image, from_datauri, get_random_image, modify_color_temperature, to_datauri
 from modules.image_utils import fetch_url, prompt2demand
 import modules.shared as shared
 from modules import sd_samplers, deepbooru, sd_hijack, images, scripts, ui, postprocessing, errors, restart, shared_items, script_callbacks, infotext_utils, sd_models, sd_schedulers
@@ -228,6 +229,7 @@ class Api:
         self.add_api_route("/nlp/v1/nature2prompt", self.nature2prompt, methods=["POST"], response_model=models.Nature2PromptResponse)
         self.add_api_route("/nlp/v1/match", self.match, methods=["POST"], response_model = models.MatchModel)
         self.add_api_route("/nlp/v1/fetchurl", self.fetch_url, methods=["POST"], response_model = models.FetchUrlModel)
+        self.add_api_route("/nlp/v1/apply_cooltone", self.apply_cooltone, methods=["POST"], response_model = models.CoolToneReponse)
         if shared.cmd_opts.api_server_stop:
             self.add_api_route("/sdapi/v1/server-kill", self.kill_webui, methods=["POST"])
             self.add_api_route("/sdapi/v1/server-restart", self.restart_webui, methods=["POST"])
@@ -428,15 +430,30 @@ class Api:
     async def match(self,req:models.MatchParam):
         print("match request coming")
         matchID = prompt2demand(req.text)
-        print(f"matchID:{matchID}")  
-        return models.MatchModel(MatchID=matchID)
+        print(f"matchID:{matchID}") 
+        image = get_random_image(matchID) 
+        if image:
+            imageuri = to_datauri(image)
+        else:
+            imageuri = None
+        return models.MatchModel(matchID=matchID,image=imageuri)
     
     async def fetch_url(self,req:models.FetchUrlParam):
         print("fetch_url request coming")
         image_url = fetch_url(req.prompt)
         print(f"image_url:{image_url}")
-        return models.FetchUrlModel(url=image_url)
+        image = download_image(image_url)
+        if image:
+            datauri = to_datauri(image)
+            return models.FetchUrlModel(image=datauri)
+        else:
+            raise Exception("image not found")
 
+    async def apply_cooltone(self, req:models.CoolToneRequest):
+        image = from_datauri(req.image)
+        image = modify_color_temperature(image)
+        datauri = to_datauri(image)
+        return models.CoolToneResponse(image=datauri)
     
 
     async def nature2prompt(self, nature2promptreq: models.Nature2PromptRequest):
