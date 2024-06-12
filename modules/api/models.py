@@ -353,5 +353,5 @@ class FetchUrlModel(BaseModel):
 class CoolToneRequest(BaseModel):
     image:str
 
-class CoolToneReponse(BaseModel):
+class CoolToneResponse(BaseModel):
     image:str
