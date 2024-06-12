@@ -450,6 +450,7 @@ class Api:
             raise Exception("image not found")
 
     async def apply_cooltone(self, req:models.CoolToneRequest):
+        print("apply_cooltone request coming")
         if req.image is None:
             print("req image is None")
         image = from_datauri(req.image)
