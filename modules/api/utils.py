@@ -8,21 +8,12 @@ import cv2
 import requests
 
 def to_datauri(image:Image) -> str:
-    image_format = image.format
-    mime_types = {
-        'jpeg': 'image/jpeg',
-        'png': 'image/png',
-        'gif': 'image/gif',
-        # 根据需要添加更多格式
-    }
-    mime_type = mime_types.get(image_format.lower(), 'application/octet-stream')
     buffered = BytesIO()
     format = 'JPEG'  # 根据你的图片格式选择合适的格式
     image.save(buffered, format=format)  # 保存图片到字节流中
     img_data = buffered.getvalue()
     base64_encoded = base64.b64encode(img_data).decode('utf-8')
     data_uri = f"data:image/{format.lower()};base64,{base64_encoded}"
-    print(data_uri)
     return data_uri
 
 
