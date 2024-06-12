@@ -459,7 +459,7 @@ class Api:
         if image is None:
             print("modify_color_temperature failed")
         datauri = to_datauri(image)
-        if image is None:
+        if datauri is None:
             print("to_datauri failed")
         return models.CoolToneResponse(image=datauri)
     

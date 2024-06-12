@@ -72,6 +72,7 @@ def download_image(image_url):
 
 
 def modify_color_temperature(img):
+    img = np.array(img)
     cold_p1 = random.randint(10,100)
     cold_p2 = random.randint(10,100)
     # ---------------- 冷色調 ---------------- #
