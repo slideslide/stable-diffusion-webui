@@ -349,7 +349,6 @@ class FetchUrlParam(BaseModel):
 class FetchUrlModel(BaseModel):
     image:str
 
-
 class CoolToneRequest(BaseModel):
     image:str
 
