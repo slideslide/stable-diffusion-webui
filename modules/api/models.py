@@ -336,8 +336,14 @@ class ExtensionItem(BaseModel):
 
 
 
-class MatchPromptRequest(BaseModel):
+class MatchParam(BaseModel):
     text: str
 
-class MatchParam(BaseModel):
+class MatchModel(BaseModel):
     MatchID : int = Field(title="MatchID",description="Match ID")
+
+class FetchUrlParam(BaseModel):
+    prompt: str
+
+class FetchUrlModel(BaseModel):
+    url:str

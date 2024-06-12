@@ -1,7 +1,7 @@
 import requests
-url = "http://127.0.0.1:7861/nlp/v1/match"
+url = "http://127.0.0.1:7861/nlp/v1/fetchurl"
 payload = {
-    "text": "puppy dog",
+    "prompt": "puppy dog",
 }
 print(url)
 resp =  requests.post(url=url,json=payload)

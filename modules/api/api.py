@@ -24,7 +24,7 @@ from nltk.tokenize import word_tokenize
 from deep_translator import GoogleTranslator
 
 
-from modules.match_spec import prompt2demand
+from modules.image_utils import fetch_url, prompt2demand
 import modules.shared as shared
 from modules import sd_samplers, deepbooru, sd_hijack, images, scripts, ui, postprocessing, errors, restart, shared_items, script_callbacks, infotext_utils, sd_models, sd_schedulers
 from modules.api import models
@@ -226,7 +226,8 @@ class Api:
         self.add_api_route("/sdapi/v1/script-info", self.get_script_info, methods=["GET"], response_model=list[models.ScriptInfo])
         self.add_api_route("/sdapi/v1/extensions", self.get_extensions_list, methods=["GET"], response_model=list[models.ExtensionItem])
         self.add_api_route("/nlp/v1/nature2prompt", self.nature2prompt, methods=["POST"], response_model=models.Nature2PromptResponse)
-        self.add_api_route("/nlp/v1/match", self.match, methods=["POST"], response_model = models.MatchParam)
+        self.add_api_route("/nlp/v1/match", self.match, methods=["POST"], response_model = models.MatchModel)
+        self.add_api_route("/nlp/v1/fetchurl", self.fetch_url, methods=["POST"], response_model = models.FetchUrlModel)
         if shared.cmd_opts.api_server_stop:
             self.add_api_route("/sdapi/v1/server-kill", self.kill_webui, methods=["POST"])
             self.add_api_route("/sdapi/v1/server-restart", self.restart_webui, methods=["POST"])
@@ -424,10 +425,18 @@ class Api:
     
         return nouns
 
-    async def match(self,req:models.MatchPromptRequest):
+    async def match(self,req:models.MatchParam):
+        print("match request coming")
         matchID = prompt2demand(req.text)
         print(f"matchID:{matchID}")  
-        return models.MatchParam(MatchID=matchID)
+        return models.MatchModel(MatchID=matchID)
+    
+    async def fetch_url(self,req:models.FetchUrlParam):
+        print("fetch_url request coming")
+        image_url = fetch_url(req.prompt)
+        print(f"image_url:{image_url}")
+        return models.FetchUrlModel(url=image_url)
+
     
 
     async def nature2prompt(self, nature2promptreq: models.Nature2PromptRequest):
