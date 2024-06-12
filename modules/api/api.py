@@ -229,7 +229,7 @@ class Api:
         self.add_api_route("/nlp/v1/nature2prompt", self.nature2prompt, methods=["POST"], response_model=models.Nature2PromptResponse)
         self.add_api_route("/nlp/v1/match", self.match, methods=["POST"], response_model = models.MatchModel)
         self.add_api_route("/nlp/v1/fetchurl", self.fetch_url, methods=["POST"], response_model = models.FetchUrlModel)
-        self.add_api_route("/nlp/v1/apply_cooltone", self.apply_cooltone, methods=["POST"], response_model = models.CoolToneReponse)
+        self.add_api_route("/nlp/v1/apply_cooltone", self.apply_cooltone, methods=["POST"], response_model = models.CoolToneResponse)
         if shared.cmd_opts.api_server_stop:
             self.add_api_route("/sdapi/v1/server-kill", self.kill_webui, methods=["POST"])
             self.add_api_route("/sdapi/v1/server-restart", self.restart_webui, methods=["POST"])
